@@ -244,6 +244,11 @@ class UserController extends BaseController {
 	public function etat($id, $etat) {
 		$user = User::find($id);
 		$user->etat = ($etat == 0) ? 1 : 0;
+
+		   if (Hash::needsRehash($user->password)) {
+			    $user->password = Hash::make($user->password);
+			}
+
 		$user->save();
 
 		return Redirect::to('users')->with('flash_success', 'Le compte de '.$user->prenom.' '.$user->nom.' à été changé');

@@ -238,11 +238,15 @@ public function compagnieNouveau() {
 		
 		if($v->passes()) {
              
-             DB::connection('assurnetsante')->table('groupe_cie')
+             if(DB::connection('assurnetsante')->table('groupe_cie')->where('NumGrpCie', Input::get('code'))->count() == 0) {
+
+             	DB::connection('assurnetsante')->table('groupe_cie')
 				                               ->insert(array('NumGrpCie' => Input::get('code'),
 				                               	     'NomGrpCie' => Input::get('libelle'),
 				                               	     'NomCie'    => Input::get('libelle')
 				                               	));
+             }
+             
 
 			
 			$path = "uploads/".Input::get('code'); 
@@ -294,7 +298,7 @@ public function compagnieUpdate() {
              }
 
              $compagnie->save();
-
+            
              DB::connection('assurnetsante')->table('groupe_cie')
                                                ->where('NumGrpCie', $compagnie->code)
 				                               ->update(array(
@@ -342,7 +346,9 @@ public function gammeNouveau() {
 			$gamme->compagnie_id = Input::get('compagnie');
             $gamme->save();
 
-
+          
+          if(DB::connection('assurnetsante')->table('gamme')->where('CODEGAMME', Input::get('code'))->count() == 0) {
+           
             DB::connection('assurnetsante')->table('gamme')
 				                               ->insert(array('CODEGAMME' => Input::get('code'),
 				                               	     'LIBELLEGAMME' => Input::get('libelle'),
@@ -350,15 +356,16 @@ public function gammeNouveau() {
 				                               	));
 
 
-		    $compagnie = Compagnie::find($gamme->compagnie_id);
-
-            DB::connection('assurnetsante')->table('compagnie')
-				                               ->insert(array('NUMCIE' => Input::get('code'),
-				                               	     'NOMCIE'   => Input::get('libelle'),
-				                               	     'SIGCIE'   => $compagnie->code,
-				                               	     'GroupCie' => $compagnie->code,
-				                               	     'NOMBREMOISACCOMPTE' => 0,
-				                               	));
+	           	$compagnie = Compagnie::find($gamme->compagnie_id);
+	            DB::connection('assurnetsante')->table('compagnie')
+					                               ->insert(array('NUMCIE' => Input::get('code'),
+					                               	     'NOMCIE'   => Input::get('libelle'),
+					                               	     'SIGCIE'   => $compagnie->code,
+					                               	     'GroupCie' => $compagnie->code,
+					                               	     'NOMBREMOISACCOMPTE' => 0,
+					                               	));
+           }
+		    
             
 
              return Redirect::to('parametrage')->with('flash_success', '	La gamme à été bien enregistrée ');
@@ -432,11 +439,15 @@ public function natureNouveau() {
 
             $nature->save();
             
-            DB::connection('assurnetsante')->table('gr_groupe_categorie')
+            if(DB::connection('assurnetsante')->table('gr_groupe_categorie')->where('codecatReclam', Input::get('code'))->count() == 0) {
+
+            	DB::connection('assurnetsante')->table('gr_groupe_categorie')
 				                               ->insert(array(
 				                               	     'codecatReclam' => Input::get('code'),
 				                               	     'libcatReclam' => Input::get('libelle'),
 				                               	));
+            }
+            
 
 
              return Redirect::to('parametrage')->with('flash_success', '	La nature à été bien enregistrée ');
@@ -469,13 +480,17 @@ public function motifNouveau() {
 		$v = Validator::make(Input::all(), $rules, $messages);
 		
 		if($v->passes()) {
+          
+              if(DB::connection('assurnetsante')->table('gr_categorie_reclamation')->where('CodeCatReclam', $nature->code)->count() == 0){
 
-		  $nature = Nature::find(Input::get('nature'));
-		  $id = DB::connection('assurnetsante')->table('gr_categorie_reclamation')
-				                               ->insertGetId(array(
-				                               	     'CodeCatReclam' => $nature->code,
-				                               	     'SouCat' => Input::get('libelle'),
-				                               	));
+              	  $nature = Nature::find(Input::get('nature'));
+				  $id = DB::connection('assurnetsante')->table('gr_categorie_reclamation')
+						                               ->insertGetId(array(
+						                               	     'CodeCatReclam' => $nature->code,
+						                               	     'SouCat' => Input::get('libelle'),
+						                               	));
+              } 
+				  
 
 			
 			$motif = new Motif();

@@ -6,7 +6,7 @@
   <br>
   <br>
 
-
+<?php $plaquette = "http://www.euromutuelle.com/ASSURSANTE/"; ?>
 <div class="container nav-hidden" id="content">
 		<div id="main">
 			<div class="container-fluid">
@@ -84,7 +84,7 @@
                 <div class="row-fluid">
 					<div class=" span12" align="left">
 					    <a href="" class="btn btn-success" rel="tooltip" data-original-title="{{ $contrat->produit->description }}"><i class="{{ $produit }}"></i> {{ $contrat->produit->label }}</a>
-						<a href="" class="btn btn-primary" rel="tooltip" data-original-title="Détails"><i class="glyphicon-search"></i></a>
+						<a href="{{ $plaquette }}EditionsCompagnie/IMPRIME{{ $contrat->gamme->code }}.php?NumCode={{ $contrat->user->numclient }}&Key={{ $contrat->user->passkey }}&NumDev={{ $contrat->contratecg }}&Formule={{ $contrat->formule }}" class="btn btn-primary" rel="tooltip" data-original-title="Détails" target="_blank"><i class="glyphicon-search"></i></a>
 						<a href="" class="btn btn-primary" rel="tooltip" data-original-title="Remboursement"><i class="glyphicon-euro"></i></a>
 						<a href="{{ URL::to('home') }}" class="btn btn-primary" rel="tooltip" data-original-title="Retour"><i class="glyphicon-share"></i></a>
 					</div>
